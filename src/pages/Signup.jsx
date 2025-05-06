@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase';
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../redux/redux/FacebookappSlice';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -10,6 +11,7 @@ export default function Signup() {
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ Fix: useNavigate hook
 
   const handleUserSignup = async (e) => {
     e.preventDefault();
@@ -22,8 +24,15 @@ export default function Signup() {
 
       setMessage("Signup successful! 🎉");
       setMessageType("success");
+
+      // Clear fields
       setEmail('');
       setPassword('');
+
+      // ✅ Navigate after successful signup
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
     } catch (error) {
       console.error("Signup error:", error.message);
       setMessage(error.message);
@@ -83,7 +92,7 @@ export default function Signup() {
 
         <p className="mt-4 text-sm text-center text-gray-500">
           Already have an account?{' '}
-          <a href="/login" className="text-indigo-600 hover:underline">Log in</a>
+          <Link to="/login" className="text-indigo-600 hover:underline">Log in</Link>
         </p>
       </div>
     </div>

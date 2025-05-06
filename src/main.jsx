@@ -8,6 +8,7 @@ import Layout from './Layout.jsx'
 import { store } from './redux/store/store.js'
 import { Provider } from 'react-redux'
 import Addpost from './pages/Addpost.jsx'
+import User from './pages/User.jsx'
 const router = createBrowserRouter([
   {
     path: '',
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/addpost',
         element: <Addpost/>
+      },
+      {
+        path: '/user',
+        element: <User/>
       }
       ]
     }

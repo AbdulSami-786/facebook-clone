@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { storage, db } from '../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 function AddPost() {
   const [text, setText] = useState('');
@@ -11,6 +12,14 @@ function AddPost() {
 
   const handlePost = async () => {
     if (!text && !image && !imageUrlInput) return;
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      alert("You must be signed in to post.");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -24,10 +33,13 @@ function AddPost() {
         imageUrl = imageUrlInput;
       }
 
-      await addDoc(collection(db, 'posts'), {
-        text,
-        imageUrl,
-        createdAt: Timestamp.now(),
+      await addDoc(collection(db, "posts"), {
+        text: text,
+        imageUrl: imageUrl,
+        createdAt: serverTimestamp(),
+        userEmail: user.email,
+        likes: 0,
+        likedBy: []  
       });
 
       setText('');
@@ -75,28 +87,26 @@ function AddPost() {
       )}
 
       <div className="mt-4 space-y-3">
-        {/* Image upload */}
         <label className="block text-indigo-600 cursor-pointer">
           <input
             type="file"
             accept="image/*"
             onChange={(e) => {
               setImage(e.target.files[0]);
-              setImageUrlInput(''); // clear URL if file is selected
+              setImageUrlInput('');
             }}
             className="hidden"
           />
           📷 Upload Image
         </label>
 
-        {/* OR Image URL input */}
         <input
           type="text"
           placeholder="Or paste image URL"
           value={imageUrlInput}
           onChange={(e) => {
             setImageUrlInput(e.target.value);
-            setImage(null); // clear file if URL is entered
+            setImage(null);
           }}
           className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />

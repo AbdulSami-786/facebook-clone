@@ -1,9 +1,8 @@
 // firebase.js
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
-import { getFirestore } from 'firebase/firestore'; // ✅ You forgot this import
-
+import { getStorage } from 'firebase/storage'; 
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyApb64ajVgexe6j3P-e_sYXinPney0Xwe4",
   authDomain: "facebook-befac.firebaseapp.com",
@@ -20,3 +19,4 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
 export const db = getFirestore(app);
+export default app;
