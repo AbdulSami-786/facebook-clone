@@ -33,7 +33,7 @@ function Navbar() {
     <nav className="bg-indigo-700 text-white px-8 py-4 shadow-lg flex justify-between items-center rounded-b-xl transition-all ease-in-out duration-300">
       {/* Logo */}
       <Link to="/" className="text-2xl font-bold text-white hover:text-indigo-300">
-        MyApp
+        ASW BIRD
       </Link>
 
       <div className="flex items-center space-x-6 w-full justify-end">

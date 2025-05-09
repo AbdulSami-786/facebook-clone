@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../src/firebase/firebase";
 import { getAuth } from "firebase/auth";
+import Swal from 'sweetalert2';
 
 function App() {
   const [postData, setPostData] = useState([]);
@@ -44,25 +45,39 @@ function App() {
   }, []);
 
   const handleDelete = async (postId) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this post?");
-    if (!confirmDelete) return;
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to delete this post?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       await deleteDoc(firestoreDoc(db, "posts", postId));
-      alert("Post deleted.");
+      Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Failed to delete post.");
+      Swal.fire('Error!', 'Failed to delete post.', 'error');
     }
   };
 
   const handleLike = async (postId, likedBy = []) => {
     if (!userEmail) {
-      alert("You must be logged in to like posts.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'You must be logged in to like posts.',
+        confirmButtonColor: '#3b82f6'
+      });
       return;
     }
 
-    if (likedBy.includes(userEmail)) return; // Already liked
+    if (likedBy.includes(userEmail)) return;
 
     try {
       const postRef = firestoreDoc(db, "posts", postId);
@@ -72,6 +87,11 @@ function App() {
       });
     } catch (err) {
       console.error("Error liking post:", err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: 'Something went wrong. Please try again later.',
+      });
     }
   };
 
@@ -85,7 +105,6 @@ function App() {
             key={post.id}
             className="bg-white rounded-3xl shadow-lg overflow-hidden mb-6 w-full transform transition duration-500 hover:scale-105 hover:shadow-2xl"
           >
-            {/* Post Image */}
             {post.imageUrl && (
               <img
                 src={post.imageUrl}
@@ -95,10 +114,8 @@ function App() {
             )}
 
             <div className="p-6 space-y-4">
-              {/* Post Text */}
               <p className="text-lg text-gray-800">{post.text || "No content available."}</p>
 
-              {/* User & Date Info */}
               <div className="flex justify-between text-sm text-gray-600">
                 <div>
                   <span className="font-semibold text-indigo-600">{post.userEmail || "Unknown"}</span>
@@ -110,7 +127,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Like Button */}
               <div className="flex justify-between items-center pt-4 border-t">
                 <button
                   onClick={() => handleLike(post.id, post.likedBy)}
@@ -124,14 +140,12 @@ function App() {
                 </button>
               </div>
 
-              {/* Liked By Users */}
               {post.likedBy?.length > 0 && (
                 <div className="text-sm text-gray-500 pt-2">
                   <strong>Liked by:</strong> {post.likedBy.join(", ")}
                 </div>
               )}
 
-              {/* Delete Button (Only for Owner) */}
               {userEmail === post.userEmail && (
                 <div className="text-right pt-2">
                   <button
