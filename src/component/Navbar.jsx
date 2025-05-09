@@ -16,68 +16,66 @@ function Navbar() {
   }, []);
 
   const handleSignOut = () => {
-    let confor = confirm("YOU WANT TO SIGNOUT")
-    if(confor){
-
+    const confirmSignOut = confirm("Are you sure you want to sign out?");
+    if (confirmSignOut) {
       const auth = getAuth();
       signOut(auth).catch((error) => {
         console.error("Sign-out error:", error);
       });
     }
-    else{
-      
-    }
   };
 
   return (
-    <nav className="bg-indigo-700 text-white px-8 py-4 shadow-lg flex justify-between items-center rounded-b-xl transition-all ease-in-out duration-300">
-      {/* Logo */}
-      <Link to="/" className="text-2xl font-bold text-white hover:text-indigo-300">
-        ASW BIRD
-      </Link>
-
-      <div className="flex items-center space-x-6 w-full justify-end">
-        {/* Add Post Button */}
+    <nav className="bg-white/60 backdrop-blur-md shadow-md border-b border-indigo-200 px-6 sm:px-10 py-4  w-full z-50 transition-all duration-300 animate-fade-in-down">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Logo */}
         <Link
-          to="/addpost"
-          className="bg-white text-indigo-700 px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300 w-32 text-center"
+          to="/"
+          className="text-2xl sm:text-3xl font-extrabold text-indigo-700 hover:text-indigo-900 transition duration-300 tracking-wide"
         >
-          Add Post
+          ASW BIRD 🐦
         </Link>
 
-        {/* Conditional Links based on User Authentication */}
-        {!currentUser ? (
-          <>
-          
-            {/* Signup Link */}
+        {/* Menu */}
+        <div className="flex items-center space-x-4 sm:space-x-6">
+          {/* Add Post Button */}
+          <Link
+            to="/addpost"
+            className="bg-indigo-600 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-full font-semibold text-sm sm:text-base shadow-md hover:shadow-lg hover:bg-indigo-700 transition-transform transform hover:scale-105 duration-300"
+          >
+            + Add Post
+          </Link>
+
+          {!currentUser ? (
+            // Sign Up
             <Link
               to="/signup"
-              className="bg-indigo-600 text-white px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300 w-32 text-center"
+              className="bg-white text-indigo-700 border border-indigo-600 px-5 py-2 sm:px-6 sm:py-3 rounded-full font-semibold text-sm sm:text-base shadow-md hover:bg-indigo-50 transition-transform transform hover:scale-105 duration-300"
             >
               Sign Up
             </Link>
-          </>
-        ) : (
-          <>
-            {/* User Profile Link */}
-            <Link
-              to="/user"
-              className="flex items-center space-x-2 bg-white text-indigo-700 px-6 py-3 rounded-full font-medium shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300 w-32 text-center"
-            >
-              <FaUserCircle className="text-xl" />
-              <span className="text-sm">{currentUser.displayName || "User"}</span>
-            </Link>
+          ) : (
+            <>
+              {/* User Profile */}
+              <Link
+                to="/user"
+                className="flex items-center space-x-2 bg-white text-indigo-700 border border-indigo-300 px-5 py-2 sm:px-6 sm:py-3 rounded-full font-semibold shadow-md hover:bg-indigo-50 transition-transform transform hover:scale-105 duration-300"
+              >
+                <FaUserCircle className="text-lg sm:text-xl" />
+                <span className="hidden sm:inline">{currentUser.displayName || "User"}</span>
+              </Link>
 
-            {/* Sign Out Button */}
-            <button
-              onClick={handleSignOut}
-              className="bg-red-600 text-white px-4 py-2 rounded-full font-medium shadow-md hover:shadow-lg transition-transform transform hover:scale-105 duration-300 w-28 text-center"
-            >
-              <FaSignOutAlt className="inline-block mr-2" />
-              Sign Out
-            </button>
-          </>
-        )}
+              {/* Sign Out */}
+              <button
+                onClick={handleSignOut}
+                className="flex items-center bg-red-500 text-white px-4 py-2 sm:px-5 sm:py-3 rounded-full font-semibold shadow-md hover:bg-red-600 transition-transform transform hover:scale-105 duration-300"
+              >
+                <FaSignOutAlt className="mr-2" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </nav>
   );
